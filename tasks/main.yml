@@ -29,21 +29,6 @@
   changed_when: False
   failed_when: False
 
-- name: "Extract installed Telegraf version"
-  set_fact:
-    telegraf_installed_version: "{{ telegraf_current_version.stdout | default('') | regex_replace('^.*Telegraf\\s+([0-9]+\\.[0-9]+\\.[0-9]+).*$', '\\1') }}"
-  when:
-    - telegraf_current_version.stdout is defined
-    - telegraf_current_version.stdout | default('') | regex_search('Telegraf\\s+[0-9]+\\.[0-9]+\\.[0-9]+')
-
-- name: "Check if installed Telegraf version matches requested version"
-  set_fact:
-    telegraf_version_mismatch: "{{ telegraf_installed_version != telegraf_agent_version }}"
-  when:
-    - telegraf_installed_version is defined
-    - telegraf_bin.stat.exists | bool
-    - telegraf_agent_package_state != "latest"
-
 - name: "Remove Telegraf with old or disabled version"
   package:
     name: telegraf
@@ -57,15 +42,16 @@
          else omit }}
   register: telegraf_remove
   when:
-    - telegraf_current_version.stdout is defined
+    - ansible_os_family != "Windows"
+    - not telegraf_agent_docker
+    - telegraf_bin.stat.exists | bool
     - >
       (
         telegraf_agent_disable_version is not none
         and telegraf_agent_disable_version | length > 0
-        and telegraf_current_version.stdout | regex_search(telegraf_agent_disable_version)
+        and telegraf_current_version.stdout | default('') | regex_search(telegraf_agent_disable_version)
       ) or (
-        telegraf_agent_package_state != "latest"
-        and telegraf_version_mismatch | default(False) | bool
+        telegraf_agent_package_state == "latest"
       )
 
 - name: "Install on RedHat"

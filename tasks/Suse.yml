@@ -16,7 +16,7 @@
   set_fact:
     telegraf_agent_package: "telegraf={{ telegraf_agent_version }}"
   when:
-    - telegraf_agent_package_state != "latest"
+    - telegraf_agent_package_state == "latest"
 
 - name: "Suse | Install repo dependencies"
   zypper:
