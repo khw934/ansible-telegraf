@@ -12,6 +12,12 @@
     state: present
   become: yes
 
+- name: "Suse | Pin Telegraf version"
+  set_fact:
+    telegraf_agent_package: "telegraf={{ telegraf_agent_version }}"
+  when:
+    - telegraf_agent_package_state != "latest"
+
 - name: "Suse | Install repo dependencies"
   zypper:
     name: ["python-libxml2", "python-xml"]

@@ -46,3 +46,9 @@ def test_telegraf_dot_d(host):
 def test_telegraf_package(host):
     telegraf = host.package('telegraf')
     assert telegraf.is_installed
+
+    ansible_vars = host.ansible.get_variables()
+    expected_version = ansible_vars.get('telegraf_agent_version')
+    if expected_version and ansible_vars.get('telegraf_agent_package_state') != 'latest':
+        version_output = host.check_output('telegraf --version')
+        assert expected_version in version_output

@@ -5,6 +5,12 @@
   set_fact:
     telegraf_agent_package: telegraf
 
+- name: "FreeBSD | Pin Telegraf version"
+  set_fact:
+    telegraf_agent_package: "telegraf-{{ telegraf_agent_version }}"
+  when:
+    - telegraf_agent_package_state != "latest"
+
 - name: "FreeBSD | Install Telegraf package"
   pkgng:
     name: "{{ telegraf_agent_package }}"

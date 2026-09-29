@@ -103,7 +103,7 @@ These properties set in how and what package will be installed.
 
 * `telegraf_agent_package`: The name of the Telegraf package to install. When `telegraf_agent_package_method` is set to `online` or `offline`, it needs to have the full path of the file. Example: `telegraf_agent_package: /tmp/telegraf.rpm`. Default: `telegraf_agent_package: telegraf`.
 * `telegraf_agent_package_method`: The installation method to be used. Can choose between: `repo`, `offline` or `online`.
-* `telegraf_agent_package_state`: If the package should be `present` or `latest`. When set to `latest`, `telegraf_agent_version` will be ignored. Default: `present`
+* `telegraf_agent_package_state`: If the package should be `present` or `latest`. When set to `latest`, `telegraf_agent_version` will be ignored. When set to `present`, the installed package will be forced to `telegraf_agent_version`. Default: `present`
 
 ### Telegraf agent process configuration.
 
